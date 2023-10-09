@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/radical-red-tool/static/css/main.9e11b7db.css",
-    "main.js": "/radical-red-tool/static/js/main.80496128.js",
+    "main.js": "/radical-red-tool/static/js/main.e0b8bbae.js",
     "static/js/787.546c7c2e.chunk.js": "/radical-red-tool/static/js/787.546c7c2e.chunk.js",
     "static/media/logo.svg": "/radical-red-tool/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/radical-red-tool/index.html",
     "main.9e11b7db.css.map": "/radical-red-tool/static/css/main.9e11b7db.css.map",
-    "main.80496128.js.map": "/radical-red-tool/static/js/main.80496128.js.map",
+    "main.e0b8bbae.js.map": "/radical-red-tool/static/js/main.e0b8bbae.js.map",
     "787.546c7c2e.chunk.js.map": "/radical-red-tool/static/js/787.546c7c2e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9e11b7db.css",
-    "static/js/main.80496128.js"
+    "static/js/main.e0b8bbae.js"
   ]
 }
