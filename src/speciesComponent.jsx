@@ -13,7 +13,7 @@ function Species() {
   const [myTeam, setMyTeam] = useState(
     JSON.parse(localStorage.getItem("myTeam"))
   );
-  const [sortField, setSortField] = useState("");
+  const [showTeam, setShowTeam] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [currentList, setCurrentList] = useState(pokemonArray);
   const [anchorEl, setAnchorEl] = React.useState("");
@@ -25,22 +25,28 @@ function Species() {
   useEffect(() => {}, [myTeam]);
 
   return (
-    <div className="main">
-      <div className="tableContainer">
-        <SpeciesTable
-          pokemonArray={pokemon}
-          updatePokemon={setMyTeam}
-          tableTitle="All Pokemon"
-        />
+    <>
+      <button onClick={() => setShowTeam(!showTeam)}>Toggle Team</button>
+      <div className="main">
+        {!showTeam ? (
+          <div className="tableContainer">
+            <SpeciesTable
+              pokemonArray={pokemon}
+              updatePokemon={setMyTeam}
+              tableTitle="All Pokemon"
+            />
+          </div>
+        ) : (
+          <div className="tableContainer">
+            <MyTeam
+              pokemonArray={myTeam}
+              updatePokemon={setMyTeam}
+              tableTitle="My Team"
+            />
+          </div>
+        )}
       </div>
-      <div className="tableContainer">
-        <MyTeam
-          pokemonArray={myTeam}
-          updatePokemon={setMyTeam}
-          tableTitle="My Team"
-        />
-      </div>
-    </div>
+    </>
   );
 }
 

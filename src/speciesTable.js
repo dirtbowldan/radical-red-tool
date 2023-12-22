@@ -148,6 +148,9 @@ function SpeciesTable(props) {
     event.stopPropagation();
     let pokemonname = event.currentTarget.getAttribute("id");
     let currentTeam = JSON.parse(localStorage.getItem("myTeam"));
+    if (currentTeam === null) {
+      currentTeam = [];
+    }
     currentTeam.push(speciesData[pokemonname]);
     props.updatePokemon(currentTeam);
     localStorage.setItem("myTeam", JSON.stringify(currentTeam));
@@ -158,7 +161,7 @@ function SpeciesTable(props) {
     let currentTeam = JSON.parse(localStorage.getItem("myTeam"));
     const filtered = currentTeam.filter((poke) => poke.name !== pokemonname);
     localStorage.setItem("myTeam", JSON.stringify(filtered));
-    // createTable(filtered);
+    props.updatePokemon(filtered);
   };
   const handleMaxEvoFilter = (event) => {
     if (maxEv === false) {
@@ -197,18 +200,16 @@ function SpeciesTable(props) {
       return (
         <div onClick={handleClick} id={species.name}>
           <div key={i} className="listItem">
-            <div>
+            <div className="speciesName">
               <img
-                height={50}
-                width={50}
+                height={30}
+                width={30}
                 src={
-                  "https://raw.githubusercontent.com/dirtbowldan/Radical-Red-Pokedex-Data/main/PokemonSprites/spriteSPECIES_" +
+                  "https://raw.githubusercontent.com/dirtbowldan/Radical-Red-Sprites/main/PokemonSprites/spriteSPECIES_" +
                   species.name +
                   ".png"
                 }
               />
-            </div>
-            <div className="speciesName">
               <div className="text">{capitalizeFirstLetter(species.name)}</div>
             </div>
             <div className="speciesType">
@@ -250,14 +251,20 @@ function SpeciesTable(props) {
             <div className="baseStat">
               <div className="text">{species.BST}</div>
             </div>
-            {props.tableTitle !== "My Team" ? (
-              <button
-                className="addButton"
-                id={species.name}
-                onClick={addPokemon}
-              >
-                Add to Team
-              </button>
+            {JSON.parse(localStorage.getItem("myTeam")).findIndex(
+              (pokemonw) => {
+                return pokemonw.name === species.name;
+              }
+            ) < 0 ? (
+              <div className="listButton">
+                <button
+                  className="addButton"
+                  id={species.name}
+                  onClick={addPokemon}
+                >
+                  Add
+                </button>
+              </div>
             ) : (
               <button
                 className="addButton"
@@ -277,19 +284,23 @@ function SpeciesTable(props) {
   return (
     <div className="App">
       <h2>{props.tableTitle}</h2>
-      <label className="searchTitle">Search: </label>
-      <input type="text" onChange={handleSearchInput} />
-      <label className="searchTitle">Max Evolution </label>
-      <input checked={maxEv} type="checkbox" onChange={handleMaxEvoFilter} />
+      <div>
+        <label className="searchTitle">Search: </label>
+        <input type="text" onChange={handleSearchInput} />
+      </div>
+      <div>
+        <label className="searchTitle">Max Evolution </label>
+        <input checked={maxEv} type="checkbox" onChange={handleMaxEvoFilter} />
+      </div>
       <div className="listItem">
-        <img width={50} src={""} />
         <div onClick={sortPokemon} id="name" className="speciesName">
+          <img width={0} src={""} />
           <div className="text">Name</div>
         </div>
         <div className="speciesType">
           <div className={`text typing`}>Type</div>
         </div>
-        <div className="speciesAbilities">
+        <div className="abilityHeader">
           <div>Abilities</div>
         </div>
         <div onClick={sortPokemon} id="baseHP" className="baseStat headerStat">
@@ -335,9 +346,7 @@ function SpeciesTable(props) {
         <div onClick={sortPokemon} id="BST" className="baseStat headerStat">
           <div className="text">BST</div>
         </div>
-        <div onClick={addPokemon} className="addButton">
-          Add to Team
-        </div>
+        <div className="addButton">Add</div>
         <Popper
           id={id}
           open={open}
@@ -346,7 +355,11 @@ function SpeciesTable(props) {
         >
           <Box
             className="moveBox"
-            sx={{ border: 1, p: 1, bgcolor: "background.paper" }}
+            sx={{
+              border: 1,
+              p: 1,
+              bgcolor: "background.paper",
+            }}
           >
             <div>
               <h4>

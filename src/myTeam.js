@@ -144,11 +144,18 @@ function MyTeam(props) {
       setPokemon(currentList);
     }
   };
-  const addPokemon = (event) => {
+  const evolvePokemon = (event) => {
     event.stopPropagation();
     let pokemonname = event.currentTarget.getAttribute("id");
     let currentTeam = JSON.parse(localStorage.getItem("myTeam"));
-    currentTeam.push(speciesData[pokemonname]);
+    let index = currentTeam.findIndex((pokemon) => {
+      return pokemon.name === pokemonname;
+    });
+    let evolution = currentTeam[index].evolution[0][2];
+    console.log(evolution);
+    console.log(currentTeam);
+    currentTeam[index] = speciesData[evolution];
+    props.updatePokemon(currentTeam);
     localStorage.setItem("myTeam", JSON.stringify(currentTeam));
   };
   const removePokemon = (event) => {
@@ -197,18 +204,16 @@ function MyTeam(props) {
       return (
         <div onClick={handleClick} id={species.name}>
           <div key={i} className="listItem">
-            <div>
+            <div className="speciesName">
               <img
-                height={50}
-                width={50}
+                height={30}
+                width={30}
                 src={
-                  "https://raw.githubusercontent.com/dirtbowldan/Radical-Red-Pokedex-Data/main/PokemonSprites/spriteSPECIES_" +
+                  "https://raw.githubusercontent.com/dirtbowldan/Radical-Red-Sprites/main/PokemonSprites/spriteSPECIES_" +
                   species.name +
                   ".png"
                 }
               />
-            </div>
-            <div className="speciesName">
               <div className="text">{capitalizeFirstLetter(species.name)}</div>
             </div>
             <div className="speciesType">
@@ -250,15 +255,8 @@ function MyTeam(props) {
             <div className="baseStat">
               <div className="text">{species.BST}</div>
             </div>
-            {props.tableTitle !== "My Team" ? (
-              <button
-                className="addButton"
-                id={species.name}
-                onClick={addPokemon}
-              >
-                Add to Team
-              </button>
-            ) : (
+
+            <div className="listButton">
               <button
                 className="addButton"
                 id={species.name}
@@ -266,7 +264,18 @@ function MyTeam(props) {
               >
                 Remove
               </button>
-            )}
+              {species.evolution.length > 0 ? (
+                <button
+                  className="addButton"
+                  id={species.name}
+                  onClick={evolvePokemon}
+                >
+                  Evolve
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
       );
@@ -277,19 +286,23 @@ function MyTeam(props) {
   return (
     <div className="App">
       <h2>{props.tableTitle}</h2>
-      <label className="searchTitle">Search: </label>
-      <input type="text" onChange={handleSearchInput} />
-      <label className="searchTitle">Max Evolution </label>
-      <input checked={maxEv} type="checkbox" onChange={handleMaxEvoFilter} />
+      <div>
+        <label className="searchTitle">Search: </label>
+        <input type="text" onChange={handleSearchInput} />
+      </div>
+      <div>
+        <label className="searchTitle">Max Evolution </label>
+        <input checked={maxEv} type="checkbox" onChange={handleMaxEvoFilter} />
+      </div>
       <div className="listItem">
-        <img width={50} src={""} />
         <div onClick={sortPokemon} id="name" className="speciesName">
+          <img width={0} src={""} />
           <div className="text">Name</div>
         </div>
         <div className="speciesType">
           <div className={`text typing`}>Type</div>
         </div>
-        <div className="speciesAbilities">
+        <div className="abilityHeader">
           <div>Abilities</div>
         </div>
         <div onClick={sortPokemon} id="baseHP" className="baseStat headerStat">
@@ -335,7 +348,7 @@ function MyTeam(props) {
         <div onClick={sortPokemon} id="BST" className="baseStat headerStat">
           <div className="text">BST</div>
         </div>
-        <div className="addButton">Add to Team</div>
+        <div className="addButton">Add</div>
         <Popper
           id={id}
           open={open}
@@ -344,7 +357,11 @@ function MyTeam(props) {
         >
           <Box
             className="moveBox"
-            sx={{ border: 1, p: 1, bgcolor: "background.paper" }}
+            sx={{
+              border: 1,
+              p: 1,
+              bgcolor: "background.paper",
+            }}
           >
             <div>
               <h4>
